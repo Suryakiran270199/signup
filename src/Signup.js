@@ -1,43 +1,163 @@
-import  React from 'react';
+import React,{useEffect} from 'react';
 import './Signup.css';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import {FcGoogle }from 'react-icons/fc';
-import {FaFacebook} from 'react-icons/fa';
-import { Button } from '@mui/material';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook } from 'react-icons/fa';
+import { Row, Col, } from 'react-bootstrap';
+import { useState } from 'react';
+import axios from 'axios';
+import sidelogo from './sidelogo.jpeg';
+import headlogo from './headlogo.jpg';
 
-  function Signup() {
-  return (
-      <div className="layout">
-          <div className="inside-layout">
-              <div className="col-signup">
-              <div className="sign-up-layout">
-              <h1>Sign Up</h1>
-              <h5>Sign Up With</h5>
-            <button onClick="" className="signup-fields"> <FcGoogle size="20px" /> Sign up with google</button>
-            <button onClick="" className="signup-fields"><FaFacebook color="blue" size="20px"/>Sign up with facebook</button>
-          </div>
-          <div>
 
-              <input type="text"className="input-field"/>
+function Signup() {
 
-              <input type="email" className="input-field"/>
-          </div>
-          <div>
-              <input type="password" className="input-pswd-field" />
-          </div>
-             <div >
-             <FormControlLabel control={<Checkbox defaultChecked />} label="i've read agree with Terms of Services and our privacy Policy" />
-             </div>
-             <div> 
-            < Button variant="contained" href="#contained-buttons" id="btn">&#8594;</Button>
-             </div>
-          </div>
-              </div>
-          
-         
-              
-      </div>
-  );
+    const google=()=>{
+        window.open("http://localhost:4000/auth/google","_self")
+    }
+
+     const facebook = ()=>{
+         window.open("http://localhost:4000/auth/facebook","_self")
+     }
+
+    const [data, setdata] = useState({
+        name: "",
+        email: "",
+        password: "",
+        checkbox: false,
+    })
+
+    //  useEffect(() => {
+    //     axios.get('http://10.13.6.206:4001/Signup').then(response =>{
+    //          console.log(response)
+    //    }).catch(err =>{
+
+    //    })
+    // }, [])
+
+    const changeHandler = (e) => {
+        const name = e.target.name;
+        const value =
+            e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        setdata({
+            ...data,
+            [name]: value
+        })
+    }
+
+    const subimtHandler = (e) => {
+        e.preventDefault();
+        console.log(data)
+
+        let sdata = {
+            username: data.name,
+            useremail: data.email,
+            userpswd: data.password,
+            usercheck: data.checkbox
+        }
+
+         axios.post("http://10.13.6.206/4000/signup", sdata).then(response => {
+             console.log(response)
+           }).catch(error => {
+
+         })
+    }
+    
+    return (
+        <div className="layout">
+            <div className="inside-layout">
+                <Row>
+                  <Col>
+                        <div className="logo-layout">
+                            <img src={sidelogo} className="logo" alt="logo is loading ...." />
+                        </div>
+                    </Col>
+                    <Col>
+                        <div className="col-signup">
+                            <img className="head-logo" src={headlogo} alt="loading...."/>
+
+                            <div className="sign-up-layout">
+                                <h1>Sign Up</h1>
+                                <h5>Sign Up With</h5>
+                            </div>
+
+                            <Row className="sfr">
+                                <Col>
+                                    <button className="signup-fields" onClick={google} > <FcGoogle size="20px" /> Sign up with google</button>
+                                </Col>
+                                <Col>
+                                    <button className="signup-fields" onClick={facebook} > <FaFacebook color="blue" size="20px" /> Sign up with facebook</button>
+                                </Col>
+                            </Row>
+
+                            <form onSubmit={subimtHandler}>
+                                <Row>
+                                    <Col>
+                                        <div className="form-group text-left">
+                                            <label htmlFor="exampleInputEmail1">Name</label>
+                                            <input type="name"
+                                                className="form-control"
+                                                name="name"
+                                                aria-describedby="emailHelp"
+                                                value={data.name}
+                                                onChange={changeHandler}
+                                            />
+                                        </div>
+                                    </Col>
+                                    <Col>
+                                        <div className="form-group text-left">
+                                            <label htmlFor="exampleInputPassword1">Email</label>
+                                            <input type="email"
+                                                className="form-control"
+                                                name="email"
+                                                value={data.email}
+                                                onChange={changeHandler}
+                                            />
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <div className="form-group text-left">
+                                        <label htmlFor="exampleInputPassword1">Password</label>
+                                        <input type="password"
+                                            style={{width:"630px"}}
+                                            className="form-control"
+                                            name="password"
+                                            value={data.password}
+                                            onChange={changeHandler}
+                                        />
+                                    </div>
+                                </Row>
+                                <Row>
+                                    <div className="form-check">
+                                        <label className="form-check-label">
+                                            <input type="checkbox"
+                                                name="checkbox"
+                                                checked={data.checkbox}
+                                                onChange={changeHandler}
+                                                className="form-check-input"
+                                            />
+                                            I've read and agree with Terms of Service and our Privacy Policy
+                                        </label>
+                                    </div>
+                                </Row>
+                                <Row>
+                                    <button type="submit" className="btn"> Get Started</button>
+                                </Row>
+
+                            </form>
+                            <Row className="row-last">
+                                <span>Already have an acount? <a href="xjkfvhfkh">Sign in</a></span>
+                            </Row>
+
+                        </div>
+                    </Col>
+                </Row>
+
+            </div>
+
+
+
+        </div>
+    );
 }
 export default Signup;
